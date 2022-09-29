@@ -63,7 +63,7 @@ class invScreen1(QWidget):
             cnt = 1
             if not ok:
                 self.label_not_enough = self.findChild(QLabel,"label_not_enough")
-                self.label_not_enough.setText("عدد المواظفين غير كافي")
+                self.label_not_enough.setText("عدد الموظفين غير كافي")
 
 
             else:
