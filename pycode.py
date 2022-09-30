@@ -1,5 +1,6 @@
 import pandas as pd
 import arabic_reshaper
+from tomlkit import value
 def arabic(str):
     return arabic_reshaper.reshape(str)[::-1]
 khalafawy="خلفاوي"
@@ -207,7 +208,11 @@ def process(monitors,days):
     return True
 
 monitors , days, observser_data_lst = [],[],[]
+
 def read_input(exel_name):
+    monitors.clear()
+    days.clear()
+    observser_data_lst.clear()
     dataframe1 = pd.read_excel(exel_name, na_values = "E",sheet_name='Sheet1')
     col=["الاسم","المسمى الوظيفى","مكان العمل","المبنى","التكليف الحالي"]
     for i in range(50):
@@ -218,13 +223,20 @@ def read_input(exel_name):
             col.append(f'يوم {i} وقت')
             col.append(f'يوم {i}')
     observser_data_lst.append(col)
+    ok = True
+    values= []
+    for i in range(5):
+        values.append(dataframe1.columns[i])
+    print(values)   
+    ok &= values ==['nameNN', 'nik', 'job', 'place', 'num']
+    if not ok:
+        return False
     for index, rows in dataframe1.iterrows():
         my_list =rows.values.tolist()
         observser_data_lst.append(my_list)
     for x in observser_data_lst:
         if(x==observser_data_lst[0]):continue
         monitors.append(Monitor(*x))
-
     # Day(day number , number of observres , number of monitors,number of managers) needed for that day in total
     day1 = Day(1,2,1,1,khalafawy)
     day2 = Day(2,5,1,1,road_el_farag)
@@ -234,7 +246,7 @@ def read_input(exel_name):
     days.append(day2)
     days.append(day3)
 
-
+    return True
 # read_input()
 # ok = process(monitors, days)
 # cnt=1
