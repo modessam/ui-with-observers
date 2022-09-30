@@ -1,7 +1,7 @@
 import pandas as pd
 import arabic_reshaper
 def arabic(str):
-    return arabic_reshaper.reshape(str)[::1]
+    return arabic_reshaper.reshape(str)[::-1]
 khalafawy="خلفاوي"
 road_el_farag="روض الفرج"
 professor="ا.د"
