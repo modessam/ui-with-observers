@@ -1,8 +1,10 @@
+from sre_compile import isstring
 import pandas as pd
 import arabic_reshaper
-from tomlkit import value
+
 def arabic(str):
     return arabic_reshaper.reshape(str)[::-1]
+daynumber={}
 khalafawy="خلفاوي"
 road_el_farag="روض الفرج"
 professor="ا.د"
@@ -11,6 +13,7 @@ doctor="دكتور"
 manager =  "رئيس لجنة"
 observer = "ملاحظ"
 monitor0= "مراقب دور"
+dss=[]
 mp = {"professor":0,professor:0,Adoctor:1,doctor:2,"Adoctor":1,"doctor":2,"other":3,"road el farag":1 ,"khalafawy":0,road_el_farag:1,khalafawy:0}
 class Task(object):
     def __init__(self,day = 0,building = 0,type = observer):
@@ -79,27 +82,27 @@ class Monitor:
         return 3 
 
 class Day:
+    def __init__(self,day = 0,obs = 0,monit = 0,manager = 0,building = 0):
+        self.day = day
+        self.obs = obs
+        self.manager = manager
+        self.monit = monit
+        self.building = building
+    def current_day(self):
+        x=tuple(self.day.split('/'))
+        return daynumber[x]
+    
+    def observers(self):
+        return self.obs
 
-	def __init__(self,day = 0,obs = 0,manager = 0,monit = 0,building = 0):
-		self.day = day
-		self.obs = obs
-		self.manager = manager
-		self.monit = monit
-		self.building = building
-	def current_day(self):
-		return self.day
+    def Manager(self):
+        return self.manager
 
-	def observers(self):
-		return self.obs
+    def monitor(self):
+        return self.monit
 
-	def Manager(self):
-		return self.manager
-
-	def monitor(self):
-		return self.monit
-
-	def work_place(self):
-		return self.building
+    def work_place(self):
+        return self.building
 
 def process_single_task(day,tsk,monitors,lst):
 
@@ -238,14 +241,30 @@ def read_input(exel_name):
         if(x==observser_data_lst[0]):continue
         monitors.append(Monitor(*x))
     # Day(day number , number of observres , number of monitors,number of managers) needed for that day in total
-    day1 = Day(1,2,1,1,khalafawy)
-    day2 = Day(2,5,1,1,road_el_farag)
-    day3 = Day(3,4,1,1,khalafawy)
-
-    days.append(day1)
-    days.append(day2)
-    days.append(day3)
-
+    # temp=dataframe2.columns
+    def srt(elem):
+        return (elem[2],elem[1],elem[0])
+    dataframe2=pd.read_excel(exel_name,sheet_name='days')
+    temp=[]
+    day=[]
+    cnt=0
+    for  x,y in dataframe2.items():
+        if(isstring(y[0])):continue
+        day.append(tuple(x.split('.')[0].split('/')));
+        print(y.values)
+        temp=y.values.tolist()
+        temp.insert(0,x.split('.')[0])
+        # temp.remove(temp[0])
+        days.append(temp)
+    day = sorted(day, key =srt )
+    for x in day:
+        if x not in daynumber.keys():
+            cnt+=1
+            daynumber[x]=cnt 
+    print(daynumber)
+    for i in range(len(days)):
+        days[i]=Day(*days[i])
+    print(dataframe1)
     return True
 # read_input()
 # ok = process(monitors, days)
