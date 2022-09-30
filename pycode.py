@@ -1,7 +1,7 @@
 import pandas as pd
 import arabic_reshaper
 def arabic(str):
-    return arabic_reshaper.reshape(str)[::1]
+    return arabic_reshaper.reshape(str)[::-1]
 khalafawy="خلفاوي"
 road_el_farag="روض الفرج"
 professor="ا.د"
@@ -208,6 +208,9 @@ def process(monitors,days):
 
 monitors , days, observser_data_lst = [],[],[]
 def read_input(exel_name):
+    monitors.clear()
+    days.clear()
+    observser_data_lst.clear()
     dataframe1 = pd.read_excel(exel_name, na_values = "E",sheet_name='Sheet1')
     col=["الاسم","المسمى الوظيفى","مكان العمل","المبنى","التكليف الحالي"]
     for i in range(50):
